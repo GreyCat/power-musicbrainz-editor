@@ -22,9 +22,9 @@ function power_editor_injection() {
 
 		panel.innerHTML = '<h1>Power editor</h1>' +
 			'<h2>Music</h2>' +
-			'<div id="pwe-release"></div>' +
+			'<div id="pwe-releases"></div>' +
 			'<h2>Group</h2>' +
-			'<div id="pwe-group"></div>' +
+			'<div id="pwe-groups"></div>' +
 			'<h2>People</h2>' +
 			'<div id="pwe-people"></div>';
 
@@ -34,19 +34,29 @@ function power_editor_injection() {
 		whereTo.insertBefore(panel, whereToFc);
 
 		update_releases();
+		update_groups();
+		update_people();
+	}
+
+	function load_json_array_from_storage(key) {
+		var str = localStorage[key];
+		if (str) {
+			return JSON.parse(str);
+		} else {
+			return [];
+		}
 	}
 
 	function load_from_storage() {
-		var rStr = localStorage['pwe_releases'];
-		if (rStr) {
-			releases = JSON.parse(rStr);
-		} else {
-			releases = [];
-		}
+		releases = load_json_array_from_storage('pwe_releases');
+		groups = load_json_array_from_storage('pwe_groups');
+		people = load_json_array_from_storage('pwe_people');
 	}
 
 	function save_to_storage() {
 		localStorage['pwe_releases'] = JSON.stringify(releases);
+		localStorage['pwe_groups'] = JSON.stringify(groups);
+		localStorage['pwe_people'] = JSON.stringify(people);
 	}
 
 	function update_releases() {
@@ -56,30 +66,70 @@ function power_editor_injection() {
 		}
 		str += '</ul>\n';
 
-		var listDiv = document.getElementById('pwe-release');
+		var listDiv = document.getElementById('pwe-releases');
 		listDiv.innerHTML = str;
 	}
 
-	function memorize_release(title, id) {
+	function update_groups() {
+		var str = '\n<ul>\n';
+		for (var i = 0; i < groups.length; i++) {
+			str += '<li><a href="' + groups[i].id + '">' + groups[i].title + '</a></li>\n';
+		}
+		str += '</ul>\n';
+
+		var listDiv = document.getElementById('pwe-groups');
+		listDiv.innerHTML = str;
+	}
+
+	function update_people() {
+		var str = '\n<ul>\n';
+		for (var i = 0; i < people.length; i++) {
+			str += '<li><a href="' + people[i].id + '">' + people[i].title + '</a></li>\n';
+		}
+		str += '</ul>\n';
+
+		var listDiv = document.getElementById('pwe-people');
+		listDiv.innerHTML = str;
+	}
+
+	function memorize(arr, title, id) {
 		// Check if it already exists
-		for (var i = 0; i < releases.length; i++) {
-			if (releases[i].id == id) {
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i].id == id) {
 				// Already exists, do nothing
 				// TODO: pump it to the top of the list
 				return;
 			}
 		}
-		releases.push({id: id, title: title});
+		arr.push({id: id, title: title});
 		save_to_storage();
-		update_releases();
+
+		if (arr == releases) {
+			update_releases();
+		} else if (arr == groups) {
+			update_groups();
+		} else if (arr == people) {
+			update_people();
+		}
 	}
 
 	function grab_current_page_entities() {
 		var content = document.getElementById('content');
-		if (content.firstChild.className == 'releaseheader') {
+		var hdr = content.firstElementChild;
+		if (hdr.className == 'releaseheader') {
 			// Release page
-			var link = content.firstChild.firstChild.firstChild;
-			memorize_release(link.innerHTML, link.href);
+			var link = hdr.firstElementChild.firstElementChild;
+			memorize(releases, link.innerHTML, link.href);
+		}
+		if (content.firstElementChild.className == 'artistheader') {
+			// Artist page
+			var artistType = hdr.children[1].innerText;
+			var link = hdr.firstElementChild.firstElementChild;
+			if (artistType == '~ Person') {
+				memorize(people, link.innerHTML, link.href);
+			} else if (artistType == '~ Group') {
+				memorize(groups, link.innerHTML, link.href);
+			}
 		}
 	}
 
