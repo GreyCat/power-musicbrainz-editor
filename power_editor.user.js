@@ -13,7 +13,8 @@ function power_editor_injection() {
 	function add_power_editor_panel() {
 		// Add styles
 		var styles = document.createElement('style');
-		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 1em; border-right: 1px solid black; background: white; z-index: 50; };'
+		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 1em; border-right: 1px solid black; background: white; z-index: 50; };' +
+			'#content { margin-left: 30em; };';
 
 		// Add panel
 		var panel = document.createElement('div');
@@ -27,10 +28,10 @@ function power_editor_injection() {
 			'<h2>People</h2>' +
 			'<div id="pwe-people"></div>';
 
-		var header = document.getElementById('header');
-
-		document.body.insertBefore(styles, header);
-		document.body.insertBefore(panel, header);
+		var whereTo = document.getElementById('page');
+		var whereToFc = whereTo.firstChild;
+		whereTo.insertBefore(styles, whereToFc);
+		whereTo.insertBefore(panel, whereToFc);
 
 		update_releases();
 	}
@@ -51,7 +52,7 @@ function power_editor_injection() {
 	function update_releases() {
 		var str = '\n<ul>\n';
 		for (var i = 0; i < releases.length; i++) {
-			str += '<li><a href="xxx">' + releases[i].title + '</a></li>\n';
+			str += '<li><a href="' + releases[i].id + '">' + releases[i].title + '</a></li>\n';
 		}
 		str += '</ul>\n';
 
@@ -62,15 +63,23 @@ function power_editor_injection() {
 	function memorize_release(title, id) {
 		// Check if it already exists
 		for (var i = 0; i < releases.length; i++) {
+			if (releases[i].id == id) {
+				// Already exists, do nothing
+				// TODO: pump it to the top of the list
+				return;
+			}
 		}
+		releases.push({id: id, title: title});
+		save_to_storage();
 		update_releases();
 	}
 
 	function grab_current_page_entities() {
 		var content = document.getElementById('content');
-		if (content.children[0].className == 'releaseheader') {
+		if (content.firstChild.className == 'releaseheader') {
 			// Release page
-			
+			var link = content.firstChild.firstChild.firstChild;
+			memorize_release(link.innerHTML, link.href);
 		}
 	}
 
