@@ -174,7 +174,36 @@ function PowerEditor() {
 	}
 
 	this.goRel = function() {
-		console.debug("Would create relationship");
+		var arrL = this.groups;
+		var arrR = this.people;
+
+		var indL = null;
+		for (var i = 0; i < arrL.length; i++) {
+			if (arrL[i].relL == 1) {
+				indL = i;
+				break;
+			}
+		}
+		if (indL == null) {
+			alert("No group chosen");
+			return;
+		}
+		var elL = arrL[indL];
+
+		var indR = null;
+		for (var i = 0; i < arrR.length; i++) {
+			if (arrR[i].relR == 1) {
+				indR = i;
+				break;
+			}
+		}
+		if (indR == null) {
+			alert("No member chosen");
+			return;
+		}
+		var elR = arrR[indR];
+
+		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=artist&type1=artist&entity0=' + elL.id + '&entity1=' + elR.id;
 	}
 
 	this.releases = this.loadJSONArrayFromStorage('pwe_releases');
