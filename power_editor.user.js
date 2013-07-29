@@ -154,4 +154,7 @@ function PowerEditor() {
 	}
 }
 
-window.pwe = new PowerEditor();
+// Trick to escape default userscripts scope into global window scope
+var script = document.createElement('script');
+script.appendChild(document.createTextNode('' + PowerEditor + '; window.pwe = new PowerEditor();'));
+document.body.appendChild(script);
