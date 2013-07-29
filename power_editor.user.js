@@ -77,33 +77,33 @@ function PowerEditor() {
 	}
 
 	function update_releases() {
-		var str = '\n<ul>\n';
+		var str = '';
 		for (var i = 0; i < releases.length; i++) {
-			str += '<li><a href="' + releases[i].id + '">' + releases[i].title + '</a></li>\n';
+			str = '<li><a href="' + releases[i].id + '">' + releases[i].title + '</a></li>\n' + str;
 		}
-		str += '</ul>\n';
+		str = '<ul>\n' + str + '</ul>\n';
 
 		var listDiv = document.getElementById('pwe-releases');
 		listDiv.innerHTML = str;
 	}
 
 	function update_groups() {
-		var str = '\n<ul>\n';
+		var str = '';
 		for (var i = 0; i < groups.length; i++) {
-			str += '<li><a href="' + groups[i].id + '">' + groups[i].title + '</a></li>\n';
+			str = '<li><a href="' + groups[i].id + '">' + groups[i].title + '</a></li>\n' + str;
 		}
-		str += '</ul>\n';
+		str = '<ul>\n' + str + '</ul>\n';
 
 		var listDiv = document.getElementById('pwe-groups');
 		listDiv.innerHTML = str;
 	}
 
 	function update_people() {
-		var str = '\n<ul>\n';
+		var str = '';
 		for (var i = 0; i < people.length; i++) {
-			str += '<li><a href="' + people[i].id + '">' + people[i].title + '</a></li>\n';
+			str = '<li><a href="' + people[i].id + '">' + people[i].title + '</a></li>\n' + str;
 		}
-		str += '</ul>\n';
+		str = '<ul>\n' + str + '</ul>\n';
 
 		var listDiv = document.getElementById('pwe-people');
 		listDiv.innerHTML = str;
