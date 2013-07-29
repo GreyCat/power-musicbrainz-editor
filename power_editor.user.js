@@ -19,7 +19,9 @@ function PowerEditor() {
 		// Add styles
 		var styles = document.createElement('style');
 		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 0.5em; background: #ffffd8; z-index: 50; };\n' +
-			'#pwe-panel .cmd { width: 2em; float: right; };';
+			'#pwe-panel .cmd { width: 2em; float: right; };\n' +
+			'#pwe-mode-rel { display: none; };\n' +
+			'#pwe-mode-recwork { display: none; };\n';
 		prependChild(document.body, styles);
 
 		// Fix content style
@@ -31,11 +33,14 @@ function PowerEditor() {
 
 		panel.innerHTML = '<h1>Power editor</h1>\n' +
 			'<div class="mode">\n' +
-			'Mode: <select id="pwe-mode" onchange="pwe.updateMode(this)">\n' +
+			'Mode: <select id="pwe-mode" onchange="pwe.updateMode(this.value)">\n' +
 			'<option value="rel">Relate</option>\n' +
 			'<option value="recwork">Rec &rarr; Work</option>\n' +
 			'</select>\n' +
+			'<button>Go!</button>\n' +
 			'</div>\n' +
+			'<div id="pwe-mode-rel">Relationships...</div>\n' +
+			'<div id="pwe-mode-recwork">Rec - work...</div>\n' +
 			'<h2>Music</h2>\n' +
 			'<div id="pwe-releases"></div>\n' +
 			'<h2>Group</h2>\n' +
@@ -145,13 +150,21 @@ function PowerEditor() {
 		}
 	}
 
+	allModes = [
+		'rel',
+		'recwork',
+	];
+
+	this.updateMode = function(newMode) {
+		for (var i = 0; i < allModes.length; i++) {
+			var el = document.getElementById('pwe-mode-' + allModes[i]);
+			el.style.display = (allModes[i] == newMode) ? 'block' : 'none';
+		}
+	}
+
 	load_from_storage();
 	add_power_editor_panel();
 	grab_current_page_entities();
-
-	this.updateMode = function(which) {
-		alert(which);
-	}
 }
 
 // Trick to escape default userscripts scope into global window scope
