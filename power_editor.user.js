@@ -90,7 +90,7 @@ function PowerEditor() {
 	function update_groups() {
 		var str = '';
 		for (var i = 0; i < groups.length; i++) {
-			str = '<li><a href="' + groups[i].id + '">' + groups[i].title + '</a></li>\n' + str;
+			str = '<li><button class="cmd" onclick="pwe.forget(pwe.groups, ' + i + ');">⊗</button><a href="' + groups[i].id + '">' + groups[i].title + '</a></li>\n' + str;
 		}
 		str = '<ul>\n' + str + '</ul>\n';
 
@@ -160,6 +160,10 @@ function PowerEditor() {
 			var el = document.getElementById('pwe-mode-' + allModes[i]);
 			el.style.display = (allModes[i] == newMode) ? 'block' : 'none';
 		}
+	}
+
+	this.forget = function(what) {
+		alert(what);
 	}
 
 	load_from_storage();
