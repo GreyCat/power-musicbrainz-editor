@@ -10,11 +10,19 @@ function power_editor_injection() {
 	var groups;
 	var people;
 
+	function prependChild(whereTo, what) {
+		var whereToFc = whereTo.firstChild;
+		whereTo.insertBefore(what, whereToFc);
+	}
+
 	function add_power_editor_panel() {
 		// Add styles
 		var styles = document.createElement('style');
-		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 1em; border-right: 1px solid black; background: white; z-index: 50; };' +
-			'#content { margin-left: 30em; };';
+		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 0.5em; background: #ffffd8; z-index: 50; };';
+		prependChild(document.body, styles);
+		
+		// Fix content style
+		document.getElementById('content').style.marginLeft = '31em';
 
 		// Add panel
 		var panel = document.createElement('div');
@@ -28,10 +36,7 @@ function power_editor_injection() {
 			'<h2>People</h2>' +
 			'<div id="pwe-people"></div>';
 
-		var whereTo = document.getElementById('page');
-		var whereToFc = whereTo.firstChild;
-		whereTo.insertBefore(styles, whereToFc);
-		whereTo.insertBefore(panel, whereToFc);
+		prependChild(document.getElementById('page'), panel);
 
 		update_releases();
 		update_groups();
