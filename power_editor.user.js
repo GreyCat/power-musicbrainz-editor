@@ -5,7 +5,7 @@
 // @match         http://musicbrainz.org/*
 // ==/UserScript==
 
-function power_editor_injection() {
+function PowerEditor() {
 	var releases;
 	var groups;
 	var people;
@@ -18,7 +18,8 @@ function power_editor_injection() {
 	function add_power_editor_panel() {
 		// Add styles
 		var styles = document.createElement('style');
-		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 0.5em; background: #ffffd8; z-index: 50; };';
+		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 0.5em; background: #ffffd8; z-index: 50; };\n' +
+			'#pwe-panel .cmd { width: 2em; float: right; };';
 		prependChild(document.body, styles);
 		
 		// Fix content style
@@ -28,13 +29,19 @@ function power_editor_injection() {
 		var panel = document.createElement('div');
 		panel.setAttribute('id', 'pwe-panel');
 
-		panel.innerHTML = '<h1>Power editor</h1>' +
-			'<h2>Music</h2>' +
-			'<div id="pwe-releases"></div>' +
-			'<h2>Group</h2>' +
-			'<div id="pwe-groups"></div>' +
-			'<h2>People</h2>' +
-			'<div id="pwe-people"></div>';
+		panel.innerHTML = '<h1>Power editor</h1>\n' +
+			'<div class="mode">\n' +
+			'Mode: <select id="pwe-mode" onchange="pwe.updateMode(this)">\n' +
+			'<option value="rel">Relate</option>\n' +
+			'<option value="recwork">Rec &rarr; Work</option>\n' +
+			'</select>\n' +
+			'</div>\n' +
+			'<h2>Music</h2>\n' +
+			'<div id="pwe-releases"></div>\n' +
+			'<h2>Group</h2>\n' +
+			'<div id="pwe-groups"></div>\n' +
+			'<h2>People</h2>\n' +
+			'<div id="pwe-people"></div>\n';
 
 		prependChild(document.getElementById('page'), panel);
 
@@ -141,6 +148,10 @@ function power_editor_injection() {
 	load_from_storage();
 	add_power_editor_panel();
 	grab_current_page_entities();
+	
+	this.updateMode = function(which) {
+		alert(which);
+	}
 }
 
-power_editor_injection();
+window.pwe = new PowerEditor();
