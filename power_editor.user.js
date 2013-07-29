@@ -48,10 +48,6 @@ function PowerEditor() {
 
 		prependChild(document.getElementById('page'), panel);
 
-		this.updateList('releases');
-		this.updateList('groups');
-		this.updateList('people');
-
 		this.updateMode('rel');
 	}
 
@@ -82,6 +78,12 @@ function PowerEditor() {
 
 		var listDiv = document.getElementById('pwe-' + listId);
 		listDiv.innerHTML = str;
+	}
+
+	this.updateLists = function() {
+		this.updateList('releases');
+		this.updateList('groups');
+		this.updateList('people');
 	}
 
 	this.listLine = function(mode, listId, arr, i) {
@@ -140,6 +142,7 @@ function PowerEditor() {
 			var el = document.getElementById('pwe-mode-' + allModes[i]);
 			el.style.display = (allModes[i] == newMode) ? 'block' : 'none';
 		}
+		this.updateLists();
 	}
 
 	this.forget = function(listId, num) {
@@ -158,6 +161,20 @@ function PowerEditor() {
 		}
 		this.updateList(listId);
 		this.saveToStorage();
+	}
+
+	this.go = function() {
+		var mode = document.getElementById('pwe-mode').value;
+
+		if (mode == 'rel') {
+			this.goRel();
+		} else {
+			console.error("Unknown mode: " + mode);
+		}
+	}
+
+	this.goRel = function() {
+		console.debug("Would create relationship");
 	}
 
 	this.releases = this.loadJSONArrayFromStorage('pwe_releases');
