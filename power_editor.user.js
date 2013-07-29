@@ -21,7 +21,7 @@ function PowerEditor() {
 		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 0.5em; background: #ffffd8; z-index: 50; };\n' +
 			'#pwe-panel .cmd { width: 2em; float: right; };';
 		prependChild(document.body, styles);
-		
+
 		// Fix content style
 		document.getElementById('content').style.marginLeft = '31em';
 
@@ -148,7 +148,7 @@ function PowerEditor() {
 	load_from_storage();
 	add_power_editor_panel();
 	grab_current_page_entities();
-	
+
 	this.updateMode = function(which) {
 		alert(which);
 	}
