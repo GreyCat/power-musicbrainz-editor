@@ -15,7 +15,10 @@ function PowerEditor() {
 		// Add styles
 		var styles = document.createElement('style');
 		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 0.5em; background: #ffffd8; z-index: 50; }\n' +
+			'#pwe-go { width: 10em; float: right; }\n' +
+			'#pwe-mode { width: auto; }\n' +
 			'#pwe-panel .cmd { width: 2em; float: right; background: #ccc; display: inline-block; text-align: center; border: 1px solid #999; cursor: pointer; }\n' +
+			'#pwe-panel .checked { background: #999; border: 1px solid #555; }\n' +
 			'';
 		prependChild(document.body, styles);
 
@@ -28,11 +31,11 @@ function PowerEditor() {
 
 		panel.innerHTML = '<h1>Power editor</h1>\n' +
 			'<div class="mode">\n' +
+			'<button id="pwe-go" onclick="pwe.go()">Go!</button>\n' +
 			'Mode: <select id="pwe-mode" onchange="pwe.updateMode(this.value)">\n' +
 			'<option value="rel">Relate</option>\n' +
 			'<option value="recwork">Rec &rarr; Work</option>\n' +
 			'</select>\n' +
-			'<button>Go!</button>\n' +
 			'</div>\n' +
 			'<div id="pwe-mode-rel">Relationships...</div>\n' +
 			'<div id="pwe-mode-recwork">Rec - work...</div>\n' +
@@ -68,15 +71,26 @@ function PowerEditor() {
 	}
 
 	this.updateList = function(listId) {
-		var arr = this[listId];
+		var mode = document.getElementById('pwe-mode').value;
+
 		var str = '';
+		var arr = this[listId];
 		for (var i = 0; i < arr.length; i++) {
-			str = '<li><a class="cmd" onclick="pwe.forget(&quot;' + listId + '&quot;, ' + i + ');">⊗</a><a href="' + arr[i].id + '">' + arr[i].title + '</a></li>\n' + str;
+			str = '<li>' + this.listLine(mode, listId, arr, i) + '</li>\n' + str;
 		}
 		str = '<ul>\n' + str + '</ul>\n';
 
 		var listDiv = document.getElementById('pwe-' + listId);
 		listDiv.innerHTML = str;
+	}
+
+	this.listLine = function(mode, listId, arr, i) {
+		var cmd = '<a class="cmd" onclick="pwe.forget(&quot;' + listId + '&quot;, ' + i + ');">⊗</a>';
+		if (mode == 'rel') {
+			cmd += '<a class="cmd' + (arr[i].relR ? ' checked' : '') + '" onclick="pwe.relate(1, &quot;' + listId + '&quot;, ' + i + ');">◗</a>';
+			cmd += '<a class="cmd' + (arr[i].relL ? ' checked' : '') + '" onclick="pwe.relate(0, &quot;' + listId + '&quot;, ' + i + ');">◖</a>';
+		}
+		return cmd + '<a href="' + arr[i].id + '">' + arr[i].title + '</a>';
 	}
 
 	this.memorize = function(listId, title, id) {
@@ -130,6 +144,18 @@ function PowerEditor() {
 
 	this.forget = function(listId, num) {
 		this[listId].splice(num, 1);
+		this.updateList(listId);
+		this.saveToStorage();
+	}
+
+	this.relate = function(side, listId, num) {
+		relName = (side == 0) ? 'relL' : 'relR';
+		var el = this[listId][num];
+		if (el[relName]) {
+			delete el[relName];
+		} else {
+			el[relName] = 1;
+		}
 		this.updateList(listId);
 		this.saveToStorage();
 	}
