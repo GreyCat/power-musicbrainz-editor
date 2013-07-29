@@ -22,8 +22,9 @@ function PowerEditor() {
 			'';
 		prependChild(document.body, styles);
 
-		// Fix content style
-		document.getElementById('content').style.marginLeft = '31em';
+		// Fix existing page elements style
+		document.getElementById('header').style.marginLeft = '31em';
+		document.getElementById('page').style.marginLeft = '31em';
 
 		// Add panel
 		var panel = document.createElement('div');
@@ -46,7 +47,7 @@ function PowerEditor() {
 			'<h2>People</h2>\n' +
 			'<div id="pwe-people"></div>\n';
 
-		prependChild(document.getElementById('page'), panel);
+		prependChild(document.body, panel);
 
 		this.updateMode('rel');
 	}
