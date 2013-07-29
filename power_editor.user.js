@@ -86,16 +86,23 @@ function PowerEditor() {
 		this.updateList('people');
 	}
 
+	listToEntity = {
+		releases: 'release',
+		groups: 'artist',
+		people: 'artist',
+	};
+
 	this.listLine = function(mode, listId, arr, i) {
 		var cmd = '<a class="cmd" onclick="pwe.forget(&quot;' + listId + '&quot;, ' + i + ');">⊗</a>';
 		if (mode == 'rel') {
 			cmd += '<a class="cmd' + (arr[i].relR ? ' checked' : '') + '" onclick="pwe.relate(1, &quot;' + listId + '&quot;, ' + i + ');">◗</a>';
 			cmd += '<a class="cmd' + (arr[i].relL ? ' checked' : '') + '" onclick="pwe.relate(0, &quot;' + listId + '&quot;, ' + i + ');">◖</a>';
 		}
-		return cmd + '<a href="' + arr[i].id + '">' + arr[i].title + '</a>';
+		return cmd + '<a href="/' + listToEntity[listId] + '/' + arr[i].id + '">' + arr[i].title + '</a>';
 	}
 
-	this.memorize = function(listId, title, id) {
+	this.memorize = function(listId, title, href) {
+		var id = href.replace(/^.*\//, '');
 		var arr = this[listId];
 
 		// Check if it already exists
@@ -127,7 +134,7 @@ function PowerEditor() {
 			if (artistType == '~ Person') {
 				this.memorize('people', link.innerHTML, link.href);
 			} else if (artistType == '~ Group') {
-				this.	memorize('groups', link.innerHTML, link.href);
+				this.memorize('groups', link.innerHTML, link.href);
 			}
 		}
 	}
