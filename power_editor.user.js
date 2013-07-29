@@ -122,6 +122,11 @@ function PowerEditor() {
 
 	this.grabCurrentPageEntities = function() {
 		var content = document.getElementById('content');
+
+		// No content on this page? We won't grab anything
+		if (!content)
+			return;
+
 		var hdr = content.firstElementChild;
 		if (hdr.className == 'releaseheader') {
 			// Release page
