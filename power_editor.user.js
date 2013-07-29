@@ -70,7 +70,7 @@ function PowerEditor() {
 		var arr = this[listId];
 		var str = '';
 		for (var i = 0; i < arr.length; i++) {
-			str = '<li><button class="cmd" onclick="pwe.forget(pwe.' + listId + ', ' + i + ');">⊗</button><a href="' + arr[i].id + '">' + arr[i].title + '</a></li>\n' + str;
+			str = '<li><button class="cmd" onclick="pwe.forget(&quot;' + listId + '&quot;, ' + i + ');">⊗</button><a href="' + arr[i].id + '">' + arr[i].title + '</a></li>\n' + str;
 		}
 		str = '<ul>\n' + str + '</ul>\n';
 
@@ -127,8 +127,10 @@ function PowerEditor() {
 		}
 	}
 
-	this.forget = function(what) {
-		alert(what);
+	this.forget = function(listId, num) {
+		this[listId].splice(num, 1);
+		this.updateList(listId);
+		this.saveToStorage();
 	}
 
 	this.releases = this.loadJSONArrayFromStorage('pwe_releases');
