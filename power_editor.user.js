@@ -15,7 +15,7 @@ function PowerEditor() {
 		// Add styles
 		var styles = document.createElement('style');
 		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 0.5em; background: #ffffd8; z-index: 50; }\n' +
-			'#pwe-panel .cmd { width: 2em; float: right; background: red; }\n' +
+			'#pwe-panel .cmd { width: 2em; float: right; background: #ccc; display: inline-block; text-align: center; border: 1px solid #999; cursor: pointer; }\n' +
 			'';
 		prependChild(document.body, styles);
 
@@ -71,7 +71,7 @@ function PowerEditor() {
 		var arr = this[listId];
 		var str = '';
 		for (var i = 0; i < arr.length; i++) {
-			str = '<li><button class="cmd" onclick="pwe.forget(&quot;' + listId + '&quot;, ' + i + ');">⊗</button><a href="' + arr[i].id + '">' + arr[i].title + '</a></li>\n' + str;
+			str = '<li><a class="cmd" onclick="pwe.forget(&quot;' + listId + '&quot;, ' + i + ');">⊗</a><a href="' + arr[i].id + '">' + arr[i].title + '</a></li>\n' + str;
 		}
 		str = '<ul>\n' + str + '</ul>\n';
 
