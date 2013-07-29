@@ -14,10 +14,9 @@ function PowerEditor() {
 	this.addPowerEditorPanel = function() {
 		// Add styles
 		var styles = document.createElement('style');
-		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 0.5em; background: #ffffd8; z-index: 50; };\n' +
-			'#pwe-panel .cmd { width: 2em; float: right; };\n' +
-			'#pwe-mode-rel { display: none; };\n' +
-			'#pwe-mode-recwork { display: none; };\n';
+		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 0.5em; background: #ffffd8; z-index: 50; }\n' +
+			'#pwe-panel .cmd { width: 2em; float: right; background: red; }\n' +
+			'';
 		prependChild(document.body, styles);
 
 		// Fix content style
@@ -49,6 +48,8 @@ function PowerEditor() {
 		this.updateList('releases');
 		this.updateList('groups');
 		this.updateList('people');
+
+		this.updateMode('rel');
 	}
 
 	this.loadJSONArrayFromStorage = function(key) {
@@ -115,7 +116,7 @@ function PowerEditor() {
 		}
 	}
 
-	this.allModes = [
+	allModes = [
 		'rel',
 		'recwork',
 	];
