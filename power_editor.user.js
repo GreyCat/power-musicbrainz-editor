@@ -24,6 +24,7 @@ function PowerEditor() {
 
 		// Fix existing page elements style
 		document.getElementById('header').style.marginLeft = '31em';
+		document.getElementById('header').style.width = 'auto';
 		document.getElementById('page').style.marginLeft = '31em';
 
 		// Add panel
