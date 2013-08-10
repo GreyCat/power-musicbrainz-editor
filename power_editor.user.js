@@ -14,7 +14,10 @@ function PowerEditor() {
 	this.addPowerEditorPanel = function() {
 		// Add styles
 		var styles = document.createElement('style');
-		styles.innerHTML = '#pwe-panel { width: 30em; float: left; padding-right: 0.5em; background: #ffffd8; z-index: 50; }\n' +
+		styles.innerHTML = '' +
+			'body { position: relative; padding: 0 0 0 30em; }\n' +
+			'#pwe-panel { position: absolute; top: 0; bottom: 0; left: 0; width: 30em; }\n' +
+			'#pwe-panel-back { padding: 0 0.5em; background: #ffffd8; }\n' +
 			'#pwe-go { width: 10em; float: right; }\n' +
 			'#pwe-mode { width: auto; }\n' +
 			'#pwe-panel .cmd { width: 2em; float: right; background: #ccc; display: inline-block; text-align: center; border: 1px solid #999; cursor: pointer; }\n' +
@@ -22,16 +25,13 @@ function PowerEditor() {
 			'';
 		prependChild(document.body, styles);
 
-		// Fix existing page elements style
-		document.getElementById('header').style.marginLeft = '31em';
-		document.getElementById('header').style.width = 'auto';
-		document.getElementById('page').style.marginLeft = '31em';
-
 		// Add panel
 		var panel = document.createElement('div');
 		panel.setAttribute('id', 'pwe-panel');
 
-		panel.innerHTML = '<h1>Power editor</h1>\n' +
+		panel.innerHTML = '' +
+			'<div id="pwe-panel-back">\n' +
+			'<h1>Power editor</h1>\n' +
 			'<div class="mode">\n' +
 			'<button id="pwe-go" onclick="pwe.go()">Go!</button>\n' +
 			'Mode: <select id="pwe-mode" onchange="pwe.updateMode(this.value)">\n' +
@@ -46,7 +46,8 @@ function PowerEditor() {
 			'<h2>Group</h2>\n' +
 			'<div id="pwe-groups"></div>\n' +
 			'<h2>People</h2>\n' +
-			'<div id="pwe-people"></div>\n';
+			'<div id="pwe-people"></div>\n' +
+			'</div>\n';
 
 		prependChild(document.body, panel);
 
