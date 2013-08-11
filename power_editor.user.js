@@ -53,10 +53,10 @@ function PowerEditor() {
 			'<div id="pwe-people"></div>\n' +
 			'<div id="pwe-settings-panel">\n' +
 			'<h1>Settings - Power MusicBrainz Editor</h1>\n' +
-			'<form name="pwe_settings">\n' +
+			'<form name="pweSettings">\n' +
 			'<div>\n' +
-			'<input type="checkbox" name="fix_rounded"/>' +
-			'<label for="fix_rounded">Fix rounded corners</label>\n' +
+			'<input type="checkbox" name="fixRounded"/>' +
+			'<label for="fixRounded">Fix rounded corners</label>\n' +
 			'</div>\n' +
 			'<button type="button" onclick="pwe.settingsOk()">OK</button>\n' +
 			'<button type="button" onclick="pwe.settingsClose()">Cancel</button>\n' +
@@ -247,12 +247,12 @@ function PowerEditor() {
 	}
 
 	this.settingsDialog = function() {
-		document.forms.pwe_settings.elements.fix_rounded.checked = this.settings.fix_rounded;
+		document.forms.pweSettings.elements.fixRounded.checked = this.settings.fixRounded;
 		document.getElementById('pwe-settings-panel').style.display = 'block';
 	}
 
 	this.settingsOk = function() {
-		this.settings.fix_rounded = document.forms.pwe_settings.elements.fix_rounded.checked;
+		this.settings.fixRounded = document.forms.pweSettings.elements.fixRounded.checked;
 		this.saveToStorage();
 		this.settingsClose();
 	}
