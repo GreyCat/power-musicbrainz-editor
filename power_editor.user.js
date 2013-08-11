@@ -15,13 +15,16 @@ function PowerEditor() {
 		// Add styles
 		var styles = document.createElement('style');
 		styles.innerHTML = '' +
-			'body { position: relative; padding: 0 0 0 30em; }\n' +
+			'body { position: relative; padding: 0 0 0 30.5em; }\n' +
 			'#pwe-panel { position: absolute; top: 0; bottom: 0; left: 0; width: 30em; }\n' +
 			'#pwe-panel-back { padding: 0 0.5em; background: #ffffd8; }\n' +
 			'#pwe-go { width: 10em; float: right; }\n' +
 			'#pwe-mode { width: auto; }\n' +
 			'#pwe-panel .cmd { width: 2em; float: right; background: #ccc; display: inline-block; text-align: center; border: 1px solid #999; cursor: pointer; }\n' +
 			'#pwe-panel .checked { background: #999; border: 1px solid #555; }\n' +
+			'#pwe-panel .settings-button { display: inline-block; float: right; background: #ccc; border: 1px solid #999; cursor: pointer; padding: 0 1em; }\n' +
+			'#pwe-settings-panel { position: absolute; width: 30em; height: 15em; top: 5em; left: 20em; z-index: 100500; background: #eee; border: 1px solid #a1a1a1; padding: 0.5em 1em; display: none; }\n' +
+			'#pwe-settings button { width: 10em; padding: 0 5em; }\n' +
 			'';
 		prependChild(document.body, styles);
 
@@ -31,9 +34,10 @@ function PowerEditor() {
 
 		panel.innerHTML = '' +
 			'<div id="pwe-panel-back">\n' +
+			'<a class="settings-button" onclick="pwe.settingsDialog()">settings</a>\n' +
 			'<h1>Power editor</h1>\n' +
 			'<div class="mode">\n' +
-			'<button id="pwe-go" onclick="pwe.go()">Go!</button>\n' +
+			'<button type="button" id="pwe-go" onclick="pwe.go()">Go!</button>\n' +
 			'Mode: <select id="pwe-mode" onchange="pwe.updateMode(this.value)">\n' +
 			'<option value="rel">Relate</option>\n' +
 			'<option value="recwork">Rec &rarr; Work</option>\n' +
@@ -47,6 +51,17 @@ function PowerEditor() {
 			'<div id="pwe-groups"></div>\n' +
 			'<h2>People</h2>\n' +
 			'<div id="pwe-people"></div>\n' +
+			'<div id="pwe-settings-panel">\n' +
+			'<h1>Settings - Power MusicBrainz Editor</h1>\n' +
+			'<form name="pwe_settings">\n' +
+			'<div>\n' +
+			'<input type="checkbox" name="fix_rounded"/>' +
+			'<label for="fix_rounded">Fix rounded corners</label>\n' +
+			'</div>\n' +
+			'<button type="button" onclick="pwe.settingsOk()">OK</button>\n' +
+			'<button type="button" onclick="pwe.settingsClose()">Cancel</button>\n' +
+			'</form>\n' +
+			'</div>\n' +
 			'</div>\n';
 
 		prependChild(document.body, panel);
@@ -63,10 +78,20 @@ function PowerEditor() {
 		}
 	}
 
+	this.loadJSONObjectFromStorage = function(key) {
+		var str = localStorage[key];
+		if (str) {
+			return JSON.parse(str);
+		} else {
+			return {};
+		}
+	}
+
 	this.saveToStorage = function() {
 		localStorage['pwe_releases'] = JSON.stringify(this.releases);
 		localStorage['pwe_groups'] = JSON.stringify(this.groups);
 		localStorage['pwe_people'] = JSON.stringify(this.people);
+		localStorage['pwe_settings'] = JSON.stringify(this.settings);
 	}
 
 	this.updateList = function(listId) {
@@ -221,9 +246,25 @@ function PowerEditor() {
 		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=artist&type1=artist&entity0=' + elL.id + '&entity1=' + elR.id;
 	}
 
+	this.settingsDialog = function() {
+		document.forms.pwe_settings.elements.fix_rounded.checked = this.settings.fix_rounded;
+		document.getElementById('pwe-settings-panel').style.display = 'block';
+	}
+
+	this.settingsOk = function() {
+		this.settings.fix_rounded = document.forms.pwe_settings.elements.fix_rounded.checked;
+		this.saveToStorage();
+		this.settingsClose();
+	}
+
+	this.settingsClose = function() {
+		document.getElementById('pwe-settings-panel').style.display = 'none';
+	}
+
 	this.releases = this.loadJSONArrayFromStorage('pwe_releases');
 	this.groups = this.loadJSONArrayFromStorage('pwe_groups');
 	this.people = this.loadJSONArrayFromStorage('pwe_people');
+	this.settings = this.loadJSONObjectFromStorage('pwe_settings');
 
 	this.addPowerEditorPanel();
 	this.grabCurrentPageEntities();
