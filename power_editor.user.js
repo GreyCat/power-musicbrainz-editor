@@ -28,6 +28,11 @@ function PowerEditor() {
 			'#header-menu div.l { display: none; }\n' +
 			'#header-menu div.r { display: none; }\n' +
 			'#header-menu { border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; }\n' +
+			'.br { display: none !important; }\n' +
+			'.bl { display: none !important; }\n' +
+			'.tr { display: none !important; }\n' +
+			'.tl { display: none !important; }\n' +
+			'#page { border-radius: 8px; }\n' +
 			'';
 		prependChild(document.body, styles);
 
