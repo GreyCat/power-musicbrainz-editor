@@ -20,7 +20,7 @@ function PowerEditor() {
 			'#pwe-panel-back { padding: 0 0.5em; background: #ffffd8; }\n' +
 			'#pwe-go { width: 10em; float: right; }\n' +
 			'#pwe-mode { width: auto; }\n' +
-			'#pwe-panel .cmd { width: 2em; float: right; background: #ccc; display: inline-block; text-align: center; border: 1px solid #999; cursor: pointer; }\n' +
+			'.cmd { width: 2em; float: right; background: #ccc; display: inline-block; text-align: center; border: 1px solid #999; cursor: pointer; }\n' +
 			'#pwe-panel .checked { background: #999; border: 1px solid #555; }\n' +
 			'#pwe-panel .settings-button { display: inline-block; float: right; background: #ccc; border: 1px solid #999; cursor: pointer; padding: 0 1em; }\n' +
 			'#pwe-settings-panel { position: absolute; width: 30em; height: 15em; top: 5em; left: 20em; z-index: 100500; background: #eee; border: 1px solid #a1a1a1; padding: 0.5em 1em; display: none; }\n' +
@@ -180,6 +180,21 @@ function PowerEditor() {
 		}
 	}
 
+	this.modifyPage = function() {
+		// Add "relate work" buttons to all tracks, if applicable
+		var r = document.evaluate('//*[@rel="mo:track"]', document, null, XPathResult.ANY_TYPE, null);
+		var tracks = [];
+		var n = r.iterateNext();
+		while (n) {
+			console.debug(n);
+			tracks.push(n.children[1]);
+			n = r.iterateNext();
+		}
+		for (var i = 0; i < tracks.length; i++) {
+			tracks[i].innerHTML = '<button class="cmd">○</button>' + tracks[i].innerHTML;
+		}
+	}
+
 	allModes = [
 		'rel',
 		'recwork',
@@ -276,6 +291,7 @@ function PowerEditor() {
 
 	this.addPowerEditorPanel();
 	this.grabCurrentPageEntities();
+	this.modifyPage();
 }
 
 // Trick to escape default userscripts scope into global window scope
