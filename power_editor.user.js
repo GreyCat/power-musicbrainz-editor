@@ -186,12 +186,13 @@ function PowerEditor() {
 		var tracks = [];
 		var n = r.iterateNext();
 		while (n) {
-			console.debug(n);
-			tracks.push(n.children[1]);
+			tracks.push(n);
 			n = r.iterateNext();
 		}
 		for (var i = 0; i < tracks.length; i++) {
-			tracks[i].innerHTML = '<button class="cmd">○</button>' + tracks[i].innerHTML;
+			var td = tracks[i].children[1];
+			var title = td.getElementsByTagName('span')[0].getAttribute('content');
+			td.innerHTML = '<button class="cmd" onclick="pwe.relateRecToWork(\'' + tracks[i].id + '\', \'' + title + '\')">○</button>' + td.innerHTML;
 		}
 	}
 
@@ -267,6 +268,12 @@ function PowerEditor() {
 		var elR = arrR[indR];
 
 		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=artist&type1=artist&entity0=' + elL.id + '&entity1=' + elR.id;
+	}
+
+	this.relateRecToWork = function(recId, title) {
+		MB.Control.RelateTo().show(new MouseEvent('click'));
+		console.debug(recId);
+		console.debug(title);
 	}
 
 	this.settingsDialog = function() {
