@@ -290,7 +290,7 @@ function PowerEditor() {
 
 		// Show relateTo dialog
 		var relateTo = MB.Control.RelateTo();
-		relateTo.show(new MouseEvent('click'));
+		relateTo.$relate.appendTo($('body')).show();
 		relateTo.$relate.offset(btn.offset());
 
 		// Set up "from" entity
@@ -299,11 +299,9 @@ function PowerEditor() {
 
 		// Search for work title = recording title
 		relateTo.$select.val('work');
+		relateTo.autocomplete.changeEntity('work');
 		relateTo.autocomplete.$input.val(title);
 		relateTo.autocomplete.searchAgain();
-
-		console.debug(recId);
-		console.debug(title);
 	}
 
 	this.settingsDialog = function() {
