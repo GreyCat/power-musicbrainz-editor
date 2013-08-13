@@ -192,12 +192,14 @@ function PowerEditor() {
 		for (var i = 0; i < tracks.length; i++) {
 			var td = tracks[i].children[1];
 			var title = td.getElementsByTagName('span')[0].getAttribute('content');
+			var id = td.getElementsByTagName('a')[0].getAttribute('resource');
+			id = id.replace(/^.*\//, '').replace(/#_$/, '');
 
 			// setTimeout is a hack to make sure that relate
 			// to dialog would be shown, despite on "hide"
 			// default action firing on any onclick event in
 			// the body; it's lame, but it works for now
-			td.innerHTML = '<button class="cmd" id="pwe-relcmd' + i + '" onclick="setTimeout(function(){pwe.relateRecToWork(' + i + ', \'' + tracks[i].id + '\', \'' + title + '\');}, 50); return false;">○</button>' + td.innerHTML;
+			td.innerHTML = '<button class="cmd" id="pwe-relcmd' + i + '" onclick="setTimeout(function(){pwe.relateRecToWork(' + i + ', \'' + id + '\', \'' + title + '\');}, 50); return false;">○</button>' + td.innerHTML;
 		}
 	}
 
