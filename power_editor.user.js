@@ -191,6 +191,14 @@ function PowerEditor() {
 		}
 		for (var i = 0; i < tracks.length; i++) {
 			var td = tracks[i].children[1];
+
+			// Check if we already have some recording relationships
+			var ars = td.getElementsByClassName('ars');
+			if (ars.length > 0) {
+				// We do => don't show any buttons
+				continue;
+			}
+
 			var title = td.getElementsByTagName('span')[0].getAttribute('content');
 			var id = td.getElementsByTagName('a')[0].getAttribute('resource');
 			id = id.replace(/^.*\//, '').replace(/#_$/, '');
