@@ -192,7 +192,12 @@ function PowerEditor() {
 		for (var i = 0; i < tracks.length; i++) {
 			var td = tracks[i].children[1];
 			var title = td.getElementsByTagName('span')[0].getAttribute('content');
-			td.innerHTML = '<button class="cmd" onclick="pwe.relateRecToWork(\'' + tracks[i].id + '\', \'' + title + '\')">○</button>' + td.innerHTML;
+
+			// setTimeout is a hack to make sure that relate
+			// to dialog would be shown, despite on "hide"
+			// default action firing on any onclick event in
+			// the body; it's lame, but it works for now
+			td.innerHTML = '<button class="cmd" id="pwe-relcmd' + i + '" onclick="setTimeout(function(){pwe.relateRecToWork(' + i + ', \'' + tracks[i].id + '\', \'' + title + '\');}, 50); return false;">○</button>' + td.innerHTML;
 		}
 	}
 
@@ -270,8 +275,23 @@ function PowerEditor() {
 		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=artist&type1=artist&entity0=' + elL.id + '&entity1=' + elR.id;
 	}
 
-	this.relateRecToWork = function(recId, title) {
-		MB.Control.RelateTo().show(new MouseEvent('click'));
+	this.relateRecToWork = function(num, recId, title) {
+		var btn = $('#pwe-relcmd' + num);
+
+		// Show relateTo dialog
+		var relateTo = MB.Control.RelateTo();
+		relateTo.show(new MouseEvent('click'));
+		relateTo.$relate.offset(btn.offset());
+
+		// Set up "from" entity
+		relateTo.$type0 = { val: function() { return 'recording'; }};
+		relateTo.$gid0 = { val: function() { return recId; }};
+
+		// Search for work title = recording title
+		relateTo.$select.val('work');
+		relateTo.autocomplete.$input.val(title);
+		relateTo.autocomplete.searchAgain();
+
 		console.debug(recId);
 		console.debug(title);
 	}
