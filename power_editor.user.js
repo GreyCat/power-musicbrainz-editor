@@ -213,9 +213,6 @@ function PowerEditor() {
 		var wrk = r.iterateNext();
 		var wrks = [];
 		while (wrk) {
-			console.debug(wrk);
-			console.debug(wrk.innerText);
-			console.debug(wrk.href);
 			wrks.push({href: wrk.href, title: wrk.innerText});
 			wrk = r.iterateNext();
 		}
