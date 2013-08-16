@@ -59,6 +59,8 @@ function PowerEditor() {
 			'<div id="pwe-groups"></div>\n' +
 			'<h2>People</h2>\n' +
 			'<div id="pwe-people"></div>\n' +
+			'<h2>Works</h2>\n' +
+			'<div id="pwe-works"></div>\n' +
 			'<div id="pwe-settings-panel">\n' +
 			'<h1>Settings - Power MusicBrainz Editor</h1>\n' +
 			'<form name="pweSettings">\n' +
@@ -99,6 +101,7 @@ function PowerEditor() {
 		localStorage['pwe_releases'] = JSON.stringify(this.releases);
 		localStorage['pwe_groups'] = JSON.stringify(this.groups);
 		localStorage['pwe_people'] = JSON.stringify(this.people);
+		localStorage['pwe_works'] = JSON.stringify(this.works);
 		localStorage['pwe_settings'] = JSON.stringify(this.settings);
 	}
 
@@ -120,12 +123,14 @@ function PowerEditor() {
 		this.updateList('releases');
 		this.updateList('groups');
 		this.updateList('people');
+		this.updateList('works');
 	}
 
 	listToEntity = {
 		releases: 'release',
 		groups: 'artist',
 		people: 'artist',
+		works: 'work',
 	};
 
 	this.listLine = function(mode, listId, arr, i) {
@@ -177,6 +182,11 @@ function PowerEditor() {
 			} else if (artistType == '~ Group') {
 				this.memorize('groups', link.innerHTML, link.href);
 			}
+		}
+		if (hdr.className == 'workheader') {
+			// Work page
+			var link = hdr.firstElementChild.firstElementChild;
+			this.memorize('works', link.innerHTML, link.href);
 		}
 	}
 
@@ -322,6 +332,7 @@ function PowerEditor() {
 	this.releases = this.loadJSONArrayFromStorage('pwe_releases');
 	this.groups = this.loadJSONArrayFromStorage('pwe_groups');
 	this.people = this.loadJSONArrayFromStorage('pwe_people');
+	this.works = this.loadJSONArrayFromStorage('pwe_works');
 	this.settings = this.loadJSONObjectFromStorage('pwe_settings');
 
 	this.addPowerEditorPanel();
