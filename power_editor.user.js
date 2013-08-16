@@ -216,6 +216,18 @@ function PowerEditor() {
 		}
 	}
 
+	this.findWorkByTitle = function(title) {
+		var res = [];
+
+		for (var i = 0; i < this.works.length; i++) {
+			if (this.works[i].title == title) {
+				res.push(this.works[i].id);
+			}
+		}
+
+		return res;
+	}
+
 	this.modifyPage = function() {
 		// Add "relate work" buttons to all tracks, if applicable
 		var r = document.evaluate('//*[@rel="mo:track"]', document, null, XPathResult.ANY_TYPE, null);
@@ -238,6 +250,14 @@ function PowerEditor() {
 			var title = td.getElementsByTagName('span')[0].getAttribute('content');
 			var id = td.getElementsByTagName('a')[0].getAttribute('resource');
 			id = id.replace(/^.*\//, '').replace(/#_$/, '');
+
+			// Do we have this work in our active list of works?
+			var wrks = this.findWorkByTitle(title);
+			if (wrks.length == 1) {
+				td.innerHTML = '<button class="cmd" id="pwe-relcmd' + i + '" onclick="pwe.relateRecIdToWorkId(\'' + id + '\', \'' + wrks[0] + '\'); return false;">●</button>' + td.innerHTML;
+				continue;
+			}
+			// TODO: process when we have more than 1 work
 
 			// setTimeout is a hack to make sure that relate
 			// to dialog would be shown, despite on "hide"
@@ -319,6 +339,10 @@ function PowerEditor() {
 		var elR = arrR[indR];
 
 		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=artist&type1=artist&entity0=' + elL.id + '&entity1=' + elR.id;
+	}
+
+	this.relateRecIdToWorkId = function(recId, workId) {
+		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=recording&type1=work&entity0=' + recId + '&entity1=' + workId;
 	}
 
 	this.relateRecToWork = function(num, recId, title) {
