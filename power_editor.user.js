@@ -25,6 +25,9 @@ function PowerEditor() {
 			'#pwe-panel .settings-button { display: inline-block; float: right; background: #ccc; border: 1px solid #999; cursor: pointer; padding: 0 1em; }\n' +
 			'#pwe-settings-panel { position: absolute; width: 30em; height: 15em; top: 5em; left: 20em; z-index: 100500; background: #eee; border: 1px solid #a1a1a1; padding: 0.5em 1em; display: none; }\n' +
 			'#pwe-settings button { width: 10em; padding: 0 5em; }\n' +
+			'#pwe-panel .mode { border: 1px solid #dfdfb8; border-bottom: none; border-radius: 5px 5px 0px 0px; }\n' +
+			'#pwe-mode-rel { border: 1px solid #dfdfb8; border-top: none; border-radius: 0px 0px 5px 5px; }\n' +
+			'#pwe-mode-recwork { border: 1px solid #dfdfb8; border-top: none; border-radius: 0px 0px 5px 5px; }\n' +
 			'#header-menu div.l { display: none; }\n' +
 			'#header-menu div.r { display: none; }\n' +
 			'#header-menu { border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; }\n' +
