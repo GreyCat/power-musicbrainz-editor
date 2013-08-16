@@ -143,20 +143,31 @@ function PowerEditor() {
 	}
 
 	this.memorize = function(listId, title, href) {
-		var id = href.replace(/^.*\//, '');
-		var arr = this[listId];
+		var list = this[listId];
+		this.memorizeOne(list, title, href);
+		this.saveToStorage();
+		this.updateList(listId);
+	}
 
+	this.memorizeOne = function(list, title, href) {
+		var id = href.replace(/^.*\//, '');
 		// Check if it already exists
-		for (var i = 0; i < arr.length; i++) {
-			if (arr[i].id == id) {
+		for (var i = 0; i < list.length; i++) {
+			if (list[i].id == id) {
 				// Already exists, do nothing
 				// TODO: pump it to the top of the list
 				return;
 			}
 		}
-		arr.push({id: id, title: title});
-		this.saveToStorage();
+		list.push({id: id, title: title});
+	}
 
+	this.memorizeArray = function(listId, arr) {
+		var list = this[listId];
+		for (var i = 0; i < arr.length; i++) {
+			this.memorizeOne(list, arr[i].title, arr[i].href);
+		}
+		this.saveToStorage();
 		this.updateList(listId);
 	}
 
@@ -187,6 +198,21 @@ function PowerEditor() {
 			// Work page
 			var link = hdr.firstElementChild.firstElementChild;
 			this.memorize('works', link.innerHTML, link.href);
+		}
+
+		// Find works in the main content area
+		var r = document.evaluate("//div[@id='content']//a[contains(@href, '/work/')]", document, null, XPathResult.ANY_TYPE, null);
+		var wrk = r.iterateNext();
+		var wrks = [];
+		while (wrk) {
+			console.debug(wrk);
+			console.debug(wrk.innerText);
+			console.debug(wrk.href);
+			wrks.push({href: wrk.href, title: wrk.innerText});
+			wrk = r.iterateNext();
+		}
+		if (wrks.length > 0) {
+			this.memorizeArray('works', wrks);
 		}
 	}
 
