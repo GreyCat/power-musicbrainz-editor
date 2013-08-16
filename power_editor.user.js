@@ -237,6 +237,11 @@ function PowerEditor() {
 	}
 
 	this.modifyPage = function() {
+		// Fill in predefined edit note, if applicable
+		var editNoteBox = document.getElementById('id-ar.edit_note');
+		if (editNoteBox && editNoteBox.value == '')
+			editNoteBox.value = document.getElementById('pwe-edit-note').value;
+
 		// Add "relate work" buttons to all tracks, if applicable
 		var r = document.evaluate('//*[@rel="mo:track"]', document, null, XPathResult.ANY_TYPE, null);
 		var tracks = [];
