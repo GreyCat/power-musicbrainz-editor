@@ -366,6 +366,9 @@ function PowerEditor() {
 			link += '&ar.attrs.live=1';
 		}
 
+		// Workaround for missing "as auto editor" flag - enforce it, if possible
+		link += '&ar.as_auto_editor=1';
+
 		link += '&returnto=' + encodeURIComponent(window.location.href);
 
 		window.location.href = link;
