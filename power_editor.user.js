@@ -342,7 +342,7 @@ function PowerEditor() {
 	}
 
 	this.relateRecIdToWorkId = function(recId, workId) {
-		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=recording&type1=work&entity0=' + recId + '&entity1=' + workId;
+		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=recording&type1=work&entity0=' + recId + '&entity1=' + workId + '&ar.link_type_id=278&returnto=' + encodeURIComponent(window.location.href);
 	}
 
 	this.relateRecToWork = function(num, recId, title) {
