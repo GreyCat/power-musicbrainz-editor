@@ -44,6 +44,7 @@ function PowerEditor() {
 			'<div id="pwe-panel-back">\n' +
 			'<a class="settings-button" onclick="pwe.settingsDialog()">settings</a>\n' +
 			'<h1>Power editor</h1>\n' +
+			'<div>Note: <input type="text" id="pwe-edit-note" oninput="pwe.saveEditNote();"/></div>\n' +
 			'<div class="mode">\n' +
 			'<button type="button" id="pwe-go" onclick="pwe.go()">Go!</button>\n' +
 			'Mode: <select id="pwe-mode" onchange="pwe.updateMode(this.value)">\n' +
@@ -76,6 +77,9 @@ function PowerEditor() {
 
 		prependChild(document.body, panel);
 
+		// Restore edit note from storage
+		document.getElementById('pwe-edit-note').value = localStorage['pwe_edit_note'] || '';
+
 		this.updateMode('rel');
 	}
 
@@ -103,6 +107,10 @@ function PowerEditor() {
 		localStorage['pwe_people'] = JSON.stringify(this.people);
 		localStorage['pwe_works'] = JSON.stringify(this.works);
 		localStorage['pwe_settings'] = JSON.stringify(this.settings);
+	}
+
+	this.saveEditNote = function() {
+		localStorage['pwe_edit_note'] = document.getElementById('pwe-edit-note').value;
 	}
 
 	this.updateList = function(listId) {
