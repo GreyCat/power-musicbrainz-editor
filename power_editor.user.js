@@ -250,6 +250,17 @@ function PowerEditor() {
 			tracks.push(n);
 			n = r.iterateNext();
 		}
+
+		// We'll need artist title if we'll be adding work->rec buttons
+		var artistName = '?';
+		if (tracks.length > 0) {
+			var r = document.evaluate('//*[@rel="foaf:maker"]', document, null, XPathResult.ANY_TYPE, null);
+			var n = r.iterateNext();
+			if (n) {
+				artistName = n.innerText;
+			}
+		}
+
 		for (var i = 0; i < tracks.length; i++) {
 			var td = tracks[i].children[1];
 
@@ -271,6 +282,9 @@ function PowerEditor() {
 				continue;
 			}
 			// TODO: process when we have more than 1 work
+
+			// Add "create work" button
+			td.innerHTML = '<button class="cmd" onclick="pwe.createWorkForRec(\'' + id + '\', \'' + title + '\', \'' + artistName + '\'); return false;">◌</button>' + td.innerHTML;
 
 			// setTimeout is a hack to make sure that relate
 			// to dialog would be shown, despite on "hide"
@@ -370,6 +384,22 @@ function PowerEditor() {
 		link += '&ar.as_auto_editor=1';
 
 		link += '&returnto=' + encodeURIComponent(window.location.href);
+
+		window.location.href = link;
+	}
+
+	this.createWorkForRec = function(recId, title, artist) {
+		// Basic link with work title
+		var link = 'http://musicbrainz.org/work/create?edit-work.name=' + encodeURIComponent(title);
+
+		// Pre-define "song" - the most frequently used in pop music work type
+		link += '&edit-work.type_id=17';
+
+		// TODO: guess language based on title
+
+		// Add note
+		var note = 'Song of ' + artist + '\nRecording: http://musicbrainz.org/recording/' + recId;
+		link += '&edit-work.edit_note=' + encodeURIComponent(note);
 
 		window.location.href = link;
 	}
