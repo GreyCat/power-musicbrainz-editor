@@ -342,7 +342,20 @@ function PowerEditor() {
 	}
 
 	this.relateRecIdToWorkId = function(recId, workId) {
-		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=recording&type1=work&entity0=' + recId + '&entity1=' + workId + '&ar.link_type_id=278&returnto=' + encodeURIComponent(window.location.href);
+		// Basic link
+		var link = 'http://musicbrainz.org/edit/relationship/create?type0=recording&type1=work&entity0=' + recId + '&entity1=' + workId + '&ar.link_type_id=278';
+
+		// Check if it's live album?
+		var r = document.evaluate("//dl[@class='properties ']/dd[@class='type']", document, null, XPathResult.ANY_TYPE, null);
+		var n = r.iterateNext();
+		if (n && n.innerHTML.indexOf('Live') >= 0) {
+			// Yeah, it's live => preset live flag
+			link += '&ar.attrs.live=1';
+		}
+
+		link += '&returnto=' + encodeURIComponent(window.location.href);
+
+		window.location.href = link;
 	}
 
 	this.relateRecToWork = function(num, recId, title) {
