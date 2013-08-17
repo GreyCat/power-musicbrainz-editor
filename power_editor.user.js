@@ -405,6 +405,9 @@ function PowerEditor() {
 		// Workaround for missing "as auto editor" flag - enforce it, if possible
 		link += '&edit-work.as_auto_editor=1';
 
+		// Schedule operation: relate freshly created work with this recording
+		this.addTodo({name: 'url', tmpl: this.relateRecIdToWorkId(recId, '#{uuid}')});
+
 		window.location.href = link;
 	}
 
@@ -461,7 +464,21 @@ function PowerEditor() {
 		document.getElementById('pwe-settings-panel').style.display = 'none';
 	}
 
+	this.addTodo = function(op) {
+		var todo = this.loadJSONArrayFromStorage('pwe_todo');
+		todo.push(op);
+		localStorage['pwe_todo'] = JSON.stringify(todo);
+	}
+
 	this.processTodo = function() {
+		// Was a previous operation a success, i.e. edit was accepted?
+		var flash = document.getElementsByClassName('flash');
+		if (flash.length != 1)
+			return;
+		if (!flash[0].innerHTML.match('your edit has been accepted'))
+			return;
+
+		// Okay, it was a success, we'll need to proceed with our todo list
 		var todo = this.loadJSONArrayFromStorage('pwe_todo');
 		var op = todo.pop();
 
@@ -473,18 +490,17 @@ function PowerEditor() {
 			var link = op.tmpl;
 
 			// Derive current entity (m[1]) and its UUID (m[2])
-			var m = /\/([^/]+)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{8})/.exec(document.location);
+			var m = /\/([^/]+)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/.exec(window.location.href);
 			var entity = m[1];
 			var uuid = m[2];
 
 			var link = op.tmpl.replace(/#\{entity\}/g, entity).replace(/#\{uuid\}/g, uuid);
 
-			console.debug('Would go straight to:');
-			console.debug(link);
-
-//			document.location.href = link;
+			localStorage['pwe_todo'] = JSON.stringify(todo);
+			window.location.href = link;
 		}
 	}
+
 
 	this.releases = this.loadJSONArrayFromStorage('pwe_releases');
 	this.groups = this.loadJSONArrayFromStorage('pwe_groups');
