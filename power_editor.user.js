@@ -310,6 +310,21 @@ function PowerEditor() {
 		'workattr',
 	];
 
+	listsVisibleByMode = {
+		all: {
+			releases: 1,
+			groups: 1,
+			people: 1,
+			works: 1,
+		},
+		workattr: {
+			releases: 0,
+			groups: 0,
+			people: 1,
+			works: 1,
+		}
+	};
+
 	this.setMode = function(newMode) {
 		document.getElementById('pwe-mode').value = newMode;
 		this.updateMode();
@@ -317,11 +332,23 @@ function PowerEditor() {
 
 	this.updateMode = function() {
 		var newMode = document.getElementById('pwe-mode').value;
+
+		// Mode-specific panel
 		for (var i = 0; i < allModes.length; i++) {
 			var el = document.getElementById('pwe-mode-' + allModes[i]);
 			el.style.display = (allModes[i] == newMode) ? 'block' : 'none';
 		}
+
+		// Refill list contents
 		this.updateLists();
+
+		// Conditional lists visibility
+		var vis = listsVisibleByMode[newMode] || listsVisibleByMode['all'];
+		for (var list in vis) {
+			var el = document.getElementById('pwe-' + list);
+			el.style.display = (vis[list]) ? 'block' : 'none';
+		}
+
 		localStorage['pwe_mode'] = newMode;
 	}
 
