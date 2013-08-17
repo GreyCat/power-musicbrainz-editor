@@ -50,7 +50,7 @@ function PowerEditor() {
 			'<div>Note: <input type="text" id="pwe-edit-note" oninput="pwe.saveEditNote();"/></div>\n' +
 			'<div class="mode">\n' +
 			'<button type="button" id="pwe-go" onclick="pwe.go()">Go!</button>\n' +
-			'Mode: <select id="pwe-mode" onchange="pwe.updateMode(this.value)">\n' +
+			'Mode: <select id="pwe-mode" onchange="pwe.updateMode()">\n' +
 			'<option value="rel">Relate</option>\n' +
 			'<option value="recwork">Rec &rarr; Work</option>\n' +
 			'</select>\n' +
@@ -83,7 +83,7 @@ function PowerEditor() {
 		// Restore edit note from storage
 		document.getElementById('pwe-edit-note').value = localStorage['pwe_edit_note'] || '';
 
-		this.updateMode('rel');
+		this.setMode(localStorage['pwe_mode'] || 'rel');
 	}
 
 	this.loadJSONArrayFromStorage = function(key) {
@@ -299,12 +299,19 @@ function PowerEditor() {
 		'recwork',
 	];
 
-	this.updateMode = function(newMode) {
+	this.setMode = function(newMode) {
+		document.getElementById('pwe-mode').value = newMode;
+		this.updateMode();
+	}
+
+	this.updateMode = function() {
+		var newMode = document.getElementById('pwe-mode').value;
 		for (var i = 0; i < allModes.length; i++) {
 			var el = document.getElementById('pwe-mode-' + allModes[i]);
 			el.style.display = (allModes[i] == newMode) ? 'block' : 'none';
 		}
 		this.updateLists();
+		localStorage['pwe_mode'] = newMode;
 	}
 
 	this.forget = function(listId, num) {
