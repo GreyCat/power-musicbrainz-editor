@@ -278,7 +278,7 @@ function PowerEditor() {
 			// Do we have this work in our active list of works?
 			var wrks = this.findWorkByTitle(title);
 			if (wrks.length == 1) {
-				td.innerHTML = '<button class="cmd" id="pwe-relcmd' + i + '" onclick="pwe.relateRecIdToWorkId(\'' + id + '\', \'' + wrks[0] + '\'); return false;">●</button>' + td.innerHTML;
+				td.innerHTML = '<a class="cmd" href="' + this.relateRecIdToWorkId(id, wrks[0]) + '">●</a>' + td.innerHTML;
 				continue;
 			}
 			// TODO: process when we have more than 1 work
@@ -385,7 +385,7 @@ function PowerEditor() {
 
 		link += '&returnto=' + encodeURIComponent(window.location.href);
 
-		window.location.href = link;
+		return link;
 	}
 
 	this.createWorkForRec = function(recId, title, artist) {
@@ -461,6 +461,31 @@ function PowerEditor() {
 		document.getElementById('pwe-settings-panel').style.display = 'none';
 	}
 
+	this.processTodo = function() {
+		var todo = this.loadJSONArrayFromStorage('pwe_todo');
+		var op = todo.pop();
+
+		// Nothing left to do?
+		if (!op)
+			return;
+
+		if (op.name == 'url') {
+			var link = op.tmpl;
+
+			// Derive current entity (m[1]) and its UUID (m[2])
+			var m = /\/([^/]+)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{8})/.exec(document.location);
+			var entity = m[1];
+			var uuid = m[2];
+
+			var link = op.tmpl.replace(/#\{entity\}/g, entity).replace(/#\{uuid\}/g, uuid);
+
+			console.debug('Would go straight to:');
+			console.debug(link);
+
+//			document.location.href = link;
+		}
+	}
+
 	this.releases = this.loadJSONArrayFromStorage('pwe_releases');
 	this.groups = this.loadJSONArrayFromStorage('pwe_groups');
 	this.people = this.loadJSONArrayFromStorage('pwe_people');
@@ -469,6 +494,7 @@ function PowerEditor() {
 
 	this.addPowerEditorPanel();
 	this.grabCurrentPageEntities();
+	this.processTodo();
 	this.modifyPage();
 }
 
