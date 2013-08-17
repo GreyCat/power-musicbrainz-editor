@@ -53,10 +53,12 @@ function PowerEditor() {
 			'Mode: <select id="pwe-mode" onchange="pwe.updateMode()">\n' +
 			'<option value="rel">Relate</option>\n' +
 			'<option value="recwork">Rec &rarr; Work</option>\n' +
+			'<option value="workattr">Work attribution</option>\n' +
 			'</select>\n' +
 			'</div>\n' +
 			'<div id="pwe-mode-rel">Relationships...</div>\n' +
 			'<div id="pwe-mode-recwork">Rec - work...</div>\n' +
+			'<div id="pwe-mode-workattr"></div>\n' +
 			'<h2>Music</h2>\n' +
 			'<div id="pwe-releases"></div>\n' +
 			'<h2>Group</h2>\n' +
@@ -147,10 +149,18 @@ function PowerEditor() {
 	this.listLine = function(mode, listId, arr, i) {
 		var cmd = '<a class="cmd" onclick="pwe.forget(&quot;' + listId + '&quot;, ' + i + ');">⊗</a>';
 		if (mode == 'rel') {
-			cmd += '<a class="cmd' + (arr[i].relR ? ' checked' : '') + '" onclick="pwe.relate(1, &quot;' + listId + '&quot;, ' + i + ');">◗</a>';
-			cmd += '<a class="cmd' + (arr[i].relL ? ' checked' : '') + '" onclick="pwe.relate(0, &quot;' + listId + '&quot;, ' + i + ');">◖</a>';
+			cmd += this.cmdLinkForToggleFlag(listId, arr, i, 'relR', '◗');
+			cmd += this.cmdLinkForToggleFlag(listId, arr, i, 'relL', '◖');
+		}
+		if (listId == 'people' && mode == 'workattr') {
+			cmd += this.cmdLinkForToggleFlag(listId, arr, i, 'composer', 'C');
+			cmd += this.cmdLinkForToggleFlag(listId, arr, i, 'lyricist', 'L');
 		}
 		return cmd + '<a href="/' + listToEntity[listId] + '/' + arr[i].id + '">' + arr[i].title + '</a>';
+	}
+
+	this.cmdLinkForToggleFlag = function(listId, list, num, flagName, icon) {
+		return '<a class="cmd' + (list[num][flagName] ? ' checked' : '') + '" onclick="pwe.toggleListFlag(\'' + listId + '\', ' + num + ', \'' + flagName + '\');">' + icon + '</a>';
 	}
 
 	this.memorize = function(listId, title, href) {
@@ -297,6 +307,7 @@ function PowerEditor() {
 	allModes = [
 		'rel',
 		'recwork',
+		'workattr',
 	];
 
 	this.setMode = function(newMode) {
@@ -320,13 +331,12 @@ function PowerEditor() {
 		this.saveToStorage();
 	}
 
-	this.relate = function(side, listId, num) {
-		relName = (side == 0) ? 'relL' : 'relR';
+	this.toggleListFlag = function(listId, num, flagName) {
 		var el = this[listId][num];
-		if (el[relName]) {
-			delete el[relName];
+		if (el[flagName]) {
+			delete el[flagName];
 		} else {
-			el[relName] = 1;
+			el[flagName] = 1;
 		}
 		this.updateList(listId);
 		this.saveToStorage();
