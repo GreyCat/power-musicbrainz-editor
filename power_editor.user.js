@@ -395,13 +395,36 @@ function PowerEditor() {
 		// Pre-define "song" - the most frequently used in pop music work type
 		link += '&edit-work.type_id=17';
 
-		// TODO: guess language based on title
+		// Guess language based on title
+		link += '&edit-work.language_id=' + this.guessLanguage(title);
 
 		// Add note
 		var note = 'Song of ' + artist + '\nRecording: http://musicbrainz.org/recording/' + recId;
 		link += '&edit-work.edit_note=' + encodeURIComponent(note);
 
+		// Workaround for missing "as auto editor" flag - enforce it, if possible
+		link += '&edit-work.as_auto_editor=1';
+
 		window.location.href = link;
+	}
+
+	this.guessLanguage = function(title) {
+		// English is default
+		var langcode = 120;
+
+		// has cyrillic letter => Russian
+		if (title.match(/[А-Яа-я]/))
+			langcode = 353;
+
+		// has greek letter => Greek
+		if (title.match(/[Α-Ωα-ω]/))
+			langcode = 159;
+
+		// has katakana or hiragana => Japanese
+		if (title.match(/[゠-ヿぁ-ゟ]/))
+			langcode = 198;
+
+		return langcode;
 	}
 
 	this.relateRecToWork = function(num, recId, title) {
