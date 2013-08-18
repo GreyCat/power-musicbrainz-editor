@@ -374,6 +374,8 @@ function PowerEditor() {
 
 		if (mode == 'rel') {
 			this.goRel();
+		} else if (mode == 'workattr') {
+			this.goWorkAttr();
 		} else {
 			console.error("Unknown mode: " + mode);
 		}
@@ -410,6 +412,51 @@ function PowerEditor() {
 		var elR = arrR[indR];
 
 		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=artist&type1=artist&entity0=' + elL.id + '&entity1=' + elR.id;
+	}
+
+	this.goWorkAttr = function() {
+		var c = this.getCurrentEntity();
+		if (c.entity != 'work') {
+			alert('Unable to attribute anything but work');
+			return;
+		}
+
+		var linkType;
+		var artistId;
+
+		// Find task to do
+		for (var i = 0; i < this.people.length; i++) {
+			var man = this.people[i];
+			if (man.composer) {
+				artistId = man.id;
+				linkType = 168;
+				delete man.composer;
+				break;
+			}
+			if (man.lyricist) {
+				artistId = man.id;
+				linkType = 165;
+				delete man.lyricist;
+				break;
+			}
+		}
+
+		if (!artistId) {
+			alert('Nobody selected to attribute');
+			return;
+		}
+
+		// Save people's list as it was modified by deletion of a task
+		this.saveToStorage();
+
+		var link = 'http://musicbrainz.org/edit/relationship/create?type0=work&type1=artist&entity0=' + c.uuid + '&entity1=' + artistId + '&ar.link_type_id=' + linkType;
+
+		// Workaround for missing "as auto editor" flag - enforce it, if possible
+		link += '&ar.as_auto_editor=1';
+
+		link += '&returnto=' + encodeURIComponent(window.location.href);
+
+		window.location.href = link;
 	}
 
 	this.relateRecIdToWorkId = function(recId, workId) {
@@ -532,19 +579,19 @@ function PowerEditor() {
 
 		if (op.name == 'url') {
 			var link = op.tmpl;
-
-			// Derive current entity (m[1]) and its UUID (m[2])
-			var m = /\/([^/]+)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/.exec(window.location.href);
-			var entity = m[1];
-			var uuid = m[2];
-
-			var link = op.tmpl.replace(/#\{entity\}/g, entity).replace(/#\{uuid\}/g, uuid);
+			var c = this.getCurrentEntity();
+			var link = op.tmpl.replace(/#\{entity\}/g, c.entity).replace(/#\{uuid\}/g, c.uuid);
 
 			localStorage['pwe_todo'] = JSON.stringify(todo);
 			window.location.href = link;
 		}
 	}
 
+	this.getCurrentEntity = function() {
+		// Derive current entity (m[1]) and its UUID (m[2])
+		var m = /\/([^/]+)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/.exec(window.location.href);
+		return {entity: m[1], uuid: m[2]};
+	}
 
 	this.releases = this.loadJSONArrayFromStorage('pwe_releases');
 	this.groups = this.loadJSONArrayFromStorage('pwe_groups');
