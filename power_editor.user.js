@@ -273,6 +273,8 @@ function PowerEditor() {
 
 		for (var i = 0; i < tracks.length; i++) {
 			var td = tracks[i].children[1];
+			if (!td)
+				continue;
 
 			// Check if we already have some recording relationships
 			var ars = td.getElementsByClassName('ars');
