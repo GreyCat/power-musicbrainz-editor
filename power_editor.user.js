@@ -415,6 +415,15 @@ function PowerEditor() {
 	}
 
 	this.goWorkAttr = function() {
+		// Are we in the middle of relationship creation form? Submit it first.
+		for (var i = 0; i < document.forms.length; i++) {
+			var f = document.forms[i];
+			if (f.action.match('/edit/relationship/create')) {
+				f.submit();
+				return;
+			}
+		}
+
 		var c = this.getCurrentEntity();
 		if (c.entity != 'work') {
 			alert('Unable to attribute anything but work');
