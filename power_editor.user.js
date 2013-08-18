@@ -590,7 +590,11 @@ function PowerEditor() {
 	this.getCurrentEntity = function() {
 		// Derive current entity (m[1]) and its UUID (m[2])
 		var m = /\/([^/]+)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/.exec(window.location.href);
-		return {entity: m[1], uuid: m[2]};
+		if (!m) {
+			return {};
+		} else {
+			return {entity: m[1], uuid: m[2]};
+		}
 	}
 
 	this.releases = this.loadJSONArrayFromStorage('pwe_releases');
