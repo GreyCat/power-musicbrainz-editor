@@ -205,7 +205,7 @@ function PowerEditor() {
 			var link = hdr.firstElementChild.firstElementChild;
 			this.memorize('releases', link.innerHTML, link.href);
 		}
-		if (content.firstElementChild.className == 'artistheader') {
+		if (hdr.className == 'artistheader') {
 			// Artist page
 			var artistType = hdr.children[1].innerText;
 			var link = hdr.firstElementChild.firstElementChild;
