@@ -59,13 +59,13 @@ function PowerEditor() {
 			'<div id="pwe-mode-rel">Relationships...</div>\n' +
 			'<div id="pwe-mode-recwork">Rec - work...</div>\n' +
 			'<div id="pwe-mode-workattr"></div>\n' +
-			'<h2>Music</h2>\n' +
+			'<h2><a class="cmd" onclick="pwe.forgetAll(\'releases\')">⊗</a>Music</h2>\n' +
 			'<div id="pwe-releases"></div>\n' +
-			'<h2>Group</h2>\n' +
+			'<h2><a class="cmd" onclick="pwe.forgetAll(\'groups\')">⊗</a>Group</h2>\n' +
 			'<div id="pwe-groups"></div>\n' +
-			'<h2>People</h2>\n' +
+			'<h2><a class="cmd" onclick="pwe.forgetAll(\'people\')">⊗</a>People</h2>\n' +
 			'<div id="pwe-people"></div>\n' +
-			'<h2>Works</h2>\n' +
+			'<h2><a class="cmd" onclick="pwe.forgetAll(\'works\')">⊗</a>Works</h2>\n' +
 			'<div id="pwe-works"></div>\n' +
 			'<div id="pwe-settings-panel">\n' +
 			'<h1>Settings - Power MusicBrainz Editor</h1>\n' +
@@ -356,6 +356,13 @@ function PowerEditor() {
 
 	this.forget = function(listId, num) {
 		this[listId].splice(num, 1);
+		this.updateList(listId);
+		this.saveToStorage();
+	}
+
+	this.forgetAll = function(listId) {
+		this[listId] = [];
+		this.grabCurrentPageEntities();
 		this.updateList(listId);
 		this.saveToStorage();
 	}
