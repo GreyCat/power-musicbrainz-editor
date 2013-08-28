@@ -489,6 +489,12 @@ function PowerEditor() {
 			link += '&ar.attrs.live=1';
 		}
 
+		// Check if we're talking of "cover" or "tribute" album?
+		if (document.getElementById('pwe-edit-note').value.match(/(cover|tribute)/i)) {
+			// Yeah, preset cover flag
+			link += '&ar.attrs.cover=1';
+		}
+
 		// Workaround for missing "as auto editor" flag - enforce it, if possible
 		link += '&ar.as_auto_editor=1';
 
