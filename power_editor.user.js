@@ -271,6 +271,7 @@ function PowerEditor() {
 			}
 		}
 
+		this.autoRecWork = [];
 		for (var i = 0; i < tracks.length; i++) {
 			var td = tracks[i].children[1];
 			if (!td)
@@ -290,7 +291,9 @@ function PowerEditor() {
 			// Do we have this work in our active list of works?
 			var wrks = this.findWorkByTitle(title);
 			if (wrks.length == 1) {
-				td.innerHTML = '<a class="cmd" href="' + this.relateRecIdToWorkId(id, wrks[0]) + '">●</a>' + td.innerHTML;
+				var link = this.relateRecIdToWorkId(id, wrks[0]);
+				td.innerHTML = '<a class="cmd" href="' + link + '">●</a>' + td.innerHTML;
+				this.autoRecWork.push(link);
 				continue;
 			}
 			// TODO: process when we have more than 1 work
@@ -383,6 +386,8 @@ function PowerEditor() {
 
 		if (mode == 'rel') {
 			this.goRel();
+		} else if (mode == 'recwork') {
+			this.goRecWork();
 		} else if (mode == 'workattr') {
 			this.goWorkAttr();
 		} else {
@@ -421,6 +426,21 @@ function PowerEditor() {
 		var elR = arrR[indR];
 
 		window.location.href = 'http://musicbrainz.org/edit/relationship/create?type0=artist&type1=artist&entity0=' + elL.id + '&entity1=' + elR.id;
+	}
+
+	this.goRecWork = function() {
+		// Are we in the middle of relationship creation form? Submit it first.
+		for (var i = 0; i < document.forms.length; i++) {
+			var f = document.forms[i];
+			if (f.action.match('/edit/relationship/create')) {
+				f.submit();
+				return;
+			}
+		}
+
+		if (this.autoRecWork && this.autoRecWork.length > 0) {
+			window.location.href = this.autoRecWork[0];
+		}
 	}
 
 	this.goWorkAttr = function() {
