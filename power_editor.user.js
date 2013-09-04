@@ -6,6 +6,9 @@
 // ==/UserScript==
 
 function PowerEditor() {
+	// Start benchmarking
+	var bm1 = new Date();
+
 	function prependChild(whereTo, what) {
 		var whereToFc = whereTo.firstChild;
 		whereTo.insertBefore(what, whereToFc);
@@ -651,6 +654,11 @@ function PowerEditor() {
 	this.grabCurrentPageEntities();
 	this.processTodo();
 	this.modifyPage();
+
+	// Finish benchmarking
+	var bm2 = new Date();
+	var e = document.getElementById('pwe-settings-panel');
+	e.innerHTML += '<p>Benchmarking: ' + (bm2 - bm1) + ' ms</p>';
 }
 
 // Trick to escape default userscripts scope into global window scope
